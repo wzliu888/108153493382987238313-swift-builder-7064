@@ -8,6 +8,7 @@ export const Route = createFileRoute('/')({
 
 function Clock() {
   const [time, setTime] = useState(new Date())
+  const [timezone, setTimezone] = useState('America/New_York')
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -17,11 +18,33 @@ function Clock() {
     return () => clearInterval(timer)
   }, [])
 
+  const timeZones = [
+    { value: 'America/New_York', label: 'New York' },
+    { value: 'America/Chicago', label: 'Chicago' },
+    { value: 'America/Denver', label: 'Denver' },
+    { value: 'America/Los_Angeles', label: 'Los Angeles' },
+    { value: 'Europe/London', label: 'London' },
+    { value: 'Europe/Paris', label: 'Paris' },
+    { value: 'Asia/Tokyo', label: 'Tokyo' },
+    { value: 'Asia/Shanghai', label: 'Shanghai' },
+  ]
+
   return (
     <div className="mb-6">
       <div className="text-2xl font-mono bg-gray-800 px-4 py-2 rounded-lg border border-gray-600">
-        {time.toLocaleTimeString()}
+        {time.toLocaleTimeString('en-US', { timeZone: timezone })}
       </div>
+      <select 
+        value={timezone}
+        onChange={(e) => setTimezone(e.target.value)}
+        className="mt-2 px-2 py-1 text-sm bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:border-blue-400"
+      >
+        {timeZones.map((tz) => (
+          <option key={tz.value} value={tz.value}>
+            {tz.label}
+          </option>
+        ))}
+      </select>
     </div>
   )
 }
