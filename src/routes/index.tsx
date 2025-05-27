@@ -6,8 +6,19 @@ export const Route = createFileRoute('/')({
   component: App,
 })
 
+const TIME_ZONES = [
+  { label: 'Local', value: Intl.DateTimeFormat().resolvedOptions().timeZone },
+  { label: 'UTC', value: 'UTC' },
+  { label: 'New York', value: 'America/New_York' },
+  { label: 'Los Angeles', value: 'America/Los_Angeles' },
+  { label: 'London', value: 'Europe/London' },
+  { label: 'Tokyo', value: 'Asia/Tokyo' },
+  { label: 'Sydney', value: 'Australia/Sydney' },
+]
+
 function Clock() {
   const [time, setTime] = useState(new Date())
+  const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -19,8 +30,27 @@ function Clock() {
 
   return (
     <div className="mb-6">
+      <div className="mb-3">
+        <select
+          value={timeZone}
+          onChange={(e) => setTimeZone(e.target.value)}
+          className="bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 text-sm"
+        >
+          {TIME_ZONES.map((tz) => (
+            <option key={tz.value} value={tz.value}>
+              {tz.label}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="text-2xl font-mono bg-gray-800 px-4 py-2 rounded-lg border border-gray-600">
-        {time.toLocaleTimeString()}
+        {time.toLocaleTimeString('en-US', { 
+          timeZone,
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        })}
       </div>
     </div>
   )
